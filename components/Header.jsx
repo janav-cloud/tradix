@@ -20,7 +20,7 @@ function Header() {
         href="https://github.com/janav-cloud/tradix"
       >
         <Github width={30} height={30}></Github>
-        <p className="font-bold text-xl hidden md:flex">GitHub</p>
+        <p className="font-bold text-xl hidden md:flex">Get Tradix!</p>
       </Link>
     </nav>
   )
