@@ -17,10 +17,10 @@ function Header() {
       </header>
       <Link 
         className="text-lg md:text-2xl p-2 md:px-5 flex flex-row justify-between items-center gap-3 rounded-full md:rounded-xl bg-slate-800 text-slate-200 cursor-pointer" 
-        href="https://github.com/janav-cloud/tradix"
+        href="https://github.com/janav-cloud/tradix/blob/main/README.md"
       >
         <Github width={30} height={30}></Github>
-        <p className="font-bold text-xl hidden md:flex">GitHub</p>
+        <p className="font-bold text-xl hidden md:flex">Get Tradix!</p>
       </Link>
     </nav>
   )
