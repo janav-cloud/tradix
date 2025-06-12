@@ -45,20 +45,22 @@ You can use any SQLite client or the CLI:
 
 ```sql
 -- stock_data table
-CREATE TABLE stock_data (
-  ticker TEXT NOT NULL,
-  date TEXT NOT NULL,
-  open REAL,
-  high REAL,
-  low REAL,
-  close REAL
+CREATE TABLE IF NOT EXISTS stock_data (
+    ticker VARCHAR(10) NOT NULL,
+    date DATE NOT NULL,
+    open DECIMAL(10, 4) NOT NULL,
+    high DECIMAL(10, 4) NOT NULL,
+    low DECIMAL(10, 4) NOT NULL,
+    close DECIMAL(10, 4) NOT NULL,
+    PRIMARY KEY (ticker, date)
 );
 
+CREATE INDEX IF NOT EXISTS idx_stock_data_date ON stock_data (date);
 --- Optional: You can make ticker, date as a COMPOSITE PRIMARY KEY and even create INDEXES for faster querying.
 
 -- tickers table
 CREATE TABLE tickers (
-  ticker TEXT PRIMARY KEY
+  ticker VARCHAR(10) PRIMARY KEY
 );
 ```
 
