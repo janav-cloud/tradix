@@ -52,7 +52,8 @@ CREATE TABLE IF NOT EXISTS stock_data (
     high DECIMAL(10, 4) NOT NULL,
     low DECIMAL(10, 4) NOT NULL,
     close DECIMAL(10, 4) NOT NULL,
-    PRIMARY KEY (ticker, date)
+    volume DECIMAL(10, 4) NOT NULL,
+    PRIMARY KEY (ticker, date) --- optional to do
 );
 
 CREATE INDEX IF NOT EXISTS idx_stock_data_date ON stock_data (date);
@@ -75,7 +76,7 @@ node seed.js
 #### Populate the Stock Data
 
 You can use your own data source (CSV, API, etc.) to fill the `stock_data` table.  
-Each row should have: `ticker`, `date`, `open`, `high`, `low`, `close`.
+Each row should have: `ticker`, `date`, `open`, `high`, `low`, `close`, `volume`.
 
 ### 4. Start the Development Server
 
