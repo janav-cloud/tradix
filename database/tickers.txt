@@ -1,7 +1,0 @@
---- Sample Stock Data Tickers ---
-A
-B
-DRD
-DXC
-E
-EBF
