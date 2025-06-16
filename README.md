@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS stock_data (
     low DECIMAL(10, 4) NOT NULL,
     close DECIMAL(10, 4) NOT NULL,
     volume DECIMAL(10, 4) NOT NULL,
-    PRIMARY KEY (ticker, date) // optional
+    PRIMARY KEY (ticker, date) --- optional to do
 );
 
 CREATE INDEX IF NOT EXISTS idx_stock_data_date ON stock_data (date);
