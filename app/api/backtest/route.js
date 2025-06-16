@@ -7,6 +7,7 @@ import {
   MACD,
   donchianChannelBreakout,
   stochasticOscillator,
+  customStrategy,
 } from '../../../lib/strategies';
 
 export async function POST(request) {
@@ -86,6 +87,9 @@ export async function POST(request) {
         break;
       case 'stochasticOscillator':
         selectedStrategy = stochasticOscillator;
+        break;
+      case 'customStrategy':
+        selectedStrategy = customStrategy;
         break;
       default:
         return NextResponse.json(
