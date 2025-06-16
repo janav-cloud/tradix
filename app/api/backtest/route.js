@@ -65,6 +65,7 @@ export async function POST(request) {
         high: parseFloat(d.high),
         low: parseFloat(d.low),
         close: parseFloat(d.close),
+        volume: parseFloat(d.volume)
       }))
     };
 

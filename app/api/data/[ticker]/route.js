@@ -30,6 +30,7 @@ export async function GET(request, { params }) {
       high: parseFloat(row.high),
       low: parseFloat(row.low),
       close: parseFloat(row.close),
+      volume: parseFloat(row.volume)
     }));
 
     return NextResponse.json(serializedData, { status: 200 });

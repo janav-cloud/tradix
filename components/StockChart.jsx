@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   LineChart,
   Line,
@@ -8,7 +7,8 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Brush
+  Brush,
+  Bar,
 } from 'recharts';
 
 function StockChart({
@@ -16,7 +16,7 @@ function StockChart({
   title,
   chartHeight = 400,
   gridColor = '#4A5568',
-  onDateSelect
+  onDateSelect,
 }) {
   if (!data || !Array.isArray(data) || data.length === 0) {
     return (
@@ -26,29 +26,29 @@ function StockChart({
     );
   }
 
-    const tailwindTextColors = [
-      'text-red-400',
-      'text-orange-400',
-      'text-yellow-400',
-      'text-green-400',
-      'text-teal-400',
-      'text-blue-400',
-      'text-indigo-400',
-      'text-purple-400',
-      'text-pink-400',
-      'text-amber-400',
-      'text-lime-400',
-      'text-emerald-400',
-      'text-cyan-400',
-      'text-sky-400',
-      'text-violet-400',
-      'text-fuchsia-400',
-      'text-rose-400',
-      'text-slate-400',
-      'text-gray-400',
-      'text-zinc-400',
-      'text-neutral-400',
-      'text-stone-400',
+  const tailwindTextColors = [
+    'text-red-400',
+    'text-orange-400',
+    'text-yellow-400',
+    'text-green-400',
+    'text-teal-400',
+    'text-blue-400',
+    'text-indigo-400',
+    'text-purple-400',
+    'text-pink-400',
+    'text-amber-400',
+    'text-lime-400',
+    'text-emerald-400',
+    'text-cyan-400',
+    'text-sky-400',
+    'text-violet-400',
+    'text-fuchsia-400',
+    'text-rose-400',
+    'text-slate-400',
+    'text-gray-400',
+    'text-zinc-400',
+    'text-neutral-400',
+    'text-stone-400',
   ];
   const [randomColorClass, setRandomColorClass] = useState('');
 
@@ -57,20 +57,25 @@ function StockChart({
     setRandomColorClass(tailwindTextColors[randomIndex]);
   }, [title]);
 
+  // Scale volume for better visualization (e.g., convert to millions)
   const formattedData = data.map(item => ({
     ...item,
     date: new Date(item.date).toLocaleDateString('en-IN', {
       month: 'short',
       day: 'numeric',
-      year: 'numeric'
+      year: 'numeric',
     }),
+    volume: (item.volume || 0) / 1_000_000,
   }));
+
+  // Debug: Log formattedData to check volume values
+  console.log('Formatted Data:', formattedData);
 
   const brushOptions = [
     { label: '3 Days', value: 3 },
     { label: '1 Week', value: 7 },
     { label: '1 Year', value: 252 },
-    { label: 'All', value: formattedData.length }
+    { label: 'All', value: formattedData.length },
   ];
   const [brushLength, setBrushLength] = useState(60);
 
@@ -89,7 +94,6 @@ function StockChart({
     lineColor = curr_close >= curr_open ? '#00C805' : '#FF3B30';
   }
 
-  // Handler for clicking a point on the chart
   const handleClick = (e) => {
     if (e && e.activePayload && e.activePayload.length > 0 && onDateSelect) {
       onDateSelect(e.activePayload[0].payload);
@@ -98,11 +102,11 @@ function StockChart({
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-semibold text-gray-200 mb-4">
+      <h2 className="text-lg font-semibold text-gray-400 mb-4">
         <span className={`text-3xl font-black ${randomColorClass}`}>
           {title}
-        </span>
-        &nbsp; — Historical Data Graph
+        </span>{' '}
+        Historical Data Graph
       </h2>
       <div className="flex gap-2 mb-2">
         {brushOptions.map(opt => (
@@ -129,7 +133,7 @@ function StockChart({
             left: 0,
             bottom: 10,
           }}
-          onClick={handleClick} // <-- Add this
+          onClick={handleClick}
         >
           <CartesianGrid
             stroke={gridColor}
@@ -139,18 +143,30 @@ function StockChart({
           <XAxis
             dataKey="date"
             stroke="#718096"
-            tick={{ fill: "#A0AEC0", fontSize: 12 }}
+            tick={{ fill: '#A0AEC0', fontSize: 12 }}
             axisLine={{ stroke: gridColor }}
             tickLine={{ stroke: gridColor }}
             tickMargin={8}
           />
           <YAxis
+            dataKey="close"
             stroke="#718096"
-            tick={{ fill: "#A0AEC0", fontSize: 12 }}
+            tick={{ fill: '#A0AEC0', fontSize: 12 }}
             axisLine={{ stroke: gridColor }}
             tickLine={{ stroke: gridColor }}
             domain={['auto', 'auto']}
             tickFormatter={(value) => `$${value.toFixed(2)}`}
+            tickMargin={8}
+          />
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            stroke="#718096"
+            tick={{ fill: '#A0AEC0', fontSize: 12 }}
+            axisLine={{ stroke: gridColor }}
+            tickLine={{ stroke: gridColor }}
+            domain={['auto', 'auto']}
+            tickFormatter={(value) => `${value.toFixed(1)}M`} // Display in millions
             tickMargin={8}
           />
           <Tooltip
@@ -164,7 +180,12 @@ function StockChart({
             }}
             labelStyle={{ color: '#A0AEC0', fontWeight: '500' }}
             itemStyle={{ color: '#E2E8F0' }}
-            formatter={(value) => [`$${value.toFixed(2)}`, 'Close Price']}
+            formatter={(value, name) => {
+              if (name === 'Volume') {
+                return [`${value.toFixed(1)}M`, 'Volume'];
+              }
+              return [`$${value.toFixed(2)}`, 'Close Price'];
+            }}
           />
           <Line
             type="monotone"
@@ -176,8 +197,15 @@ function StockChart({
             animationDuration={800}
             animationEasing="ease-in-out"
           />
+          <Bar
+            yAxisId="right"
+            dataKey="volume"
+            fill="#FBBF24"
+            opacity={0.4} // Slightly transparent to avoid overpowering the line
+            barSize={30} // Increased for better visibility
+            name="Volume"
+          />
           <Brush
-            markerWidth={20}
             dataKey="date"
             height={30}
             stroke="#1121ff"

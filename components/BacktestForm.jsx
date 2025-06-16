@@ -6,10 +6,10 @@ import { PlayIcon, ChartCandlestick } from 'lucide-react';
 
 function BacktestForm({ onSubmit, onShowChart, loading, error }) {
   const [tickerOptions, setTickerOptions] = useState([]);
-  const [ticker, setTicker] = useState('A');
+  const [ticker, setTicker] = useState('AAPL');
   const [initialCapital, setInitialCapital] = useState(100000);
   const [dataFetchStartDate, setDataFetchStartDate] = useState('2020-01-01');
-  const [dataFetchEndDate, setDataFetchEndDate] = useState('2023-12-31');
+  const [dataFetchEndDate, setDataFetchEndDate] = useState('2024-12-31');
   const [simulationStartDate, setSimulationStartDate] = useState('2021-01-01');
   const [strategyName, setStrategyName] = useState('maCrossover');
   // Parameters for maCrossover

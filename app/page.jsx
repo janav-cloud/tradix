@@ -7,9 +7,9 @@ import BacktestResults from '../components/BacktestResults';
 
 export default function Home() {
   const [stockData, setStockData] = useState([]);
-  const [tickerForChart, setTickerForChart] = useState('A');
+  const [tickerForChart, setTickerForChart] = useState('AAPL');
   const [startDateForChart, setStartDateForChart] = useState('2020-01-01');
-  const [endDateForChart, setEndDateForChart] = useState('2023-12-31');
+  const [endDateForChart, setEndDateForChart] = useState('2024-12-31');
   const [selectedDate, setSelectedDate] = useState(null);
   const [loadingChart, setLoadingChart] = useState(false);
   const [chartError, setChartError] = useState(null);
@@ -104,8 +104,24 @@ export default function Home() {
               <>
                 <StockChart
                   data={stockData}
-                  title={`${tickerForChart}`}
-                  onDateSelect={setSelectedDate}
+                  title={
+                  <div className="flex items-center gap-3">
+                    <div className='bg-slate-200 rounded-full'>
+                      <img
+                        src={`https://assets-netstorage.groww.in/intl-stocks/logos/${tickerForChart}.png`} // Primary image source
+                        alt={`${tickerForChart} Logo`}
+                        className="p-1 w-10 h-10 object-contain items-center mix-blend-multiply"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = 'globe.svg';
+                          e.target.style.display = 'block';
+                        }}
+                      />
+                    </div>
+                    <span className="text-2xl">{tickerForChart}</span>
+                  </div>
+                }
+                onDateSelect={setSelectedDate}
                 />
                 {(selectedDate || stockData.length > 0) && (
                   (() => {
@@ -121,15 +137,18 @@ export default function Home() {
                             day: 'numeric',
                             year: 'numeric'
                           }),
+                          volume: (last.volume || 0) / 1_000_000,
                         };
                       })();
 
                     return (
                       <div className="mt-8 bg-gray-700 rounded-lg p-8 text-gray-100 text-sm md:text-xl">
                         <div className="w-full md:w-3/4 flex flex-row justify-between">
-                          <div>
+                          <div className='flex flex-col gap-2'>
                             <strong>Date:</strong>
                             <div className="text-sm md:text-xl">{detail.date}</div>
+                            <strong>Volume:</strong>
+                            <div className="text-sm md:text-xl text-amber-300">▣ {detail.volume} M</div>
                           </div>
                           <div className='flex flex-col gap-2'>
                             <strong>Open:</strong>
