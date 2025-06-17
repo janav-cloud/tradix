@@ -7,14 +7,12 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Brush,
-  Bar,
+  Brush
 } from 'recharts';
 
 function StockChart({
   data,
   title,
-  chartHeight = 400,
   gridColor = '#4A5568',
   onDateSelect,
 }) {
@@ -25,6 +23,22 @@ function StockChart({
       </div>
     );
   }
+
+  const [responsiveChartHeight, setResponsiveChartHeight] = useState(400);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const isMobile = window.innerWidth <= 768; 
+      setResponsiveChartHeight(isMobile ? 200 : 400);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const tailwindTextColors = [
     'text-red-400',
@@ -51,7 +65,7 @@ function StockChart({
     'text-stone-400',
   ];
   const [randomColorClass, setRandomColorClass] = useState('');
-
+  
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * tailwindTextColors.length);
     setRandomColorClass(tailwindTextColors[randomIndex]);
@@ -102,8 +116,8 @@ function StockChart({
 
   return (
     <div className="p-4">
-      <h2 className="text-lg font-semibold text-gray-400 mb-4">
-        <span className={`text-3xl font-black ${randomColorClass}`}>
+      <h2 className="text-sm md:text-lg font-semibold text-gray-400 mb-4">
+        <span className={`text-md md:text-3xl font-black ${randomColorClass}`}>
           {title}
         </span>{' '}
         Historical Data Graph
@@ -124,7 +138,7 @@ function StockChart({
           </button>
         ))}
       </div>
-      <ResponsiveContainer width="100%" height={chartHeight}>
+      <ResponsiveContainer width="100%" height={responsiveChartHeight}>
         <LineChart
           data={formattedData}
           margin={{
@@ -197,13 +211,17 @@ function StockChart({
             animationDuration={800}
             animationEasing="ease-in-out"
           />
-          <Bar
+          <Line
             yAxisId="right"
             dataKey="volume"
-            fill="#FBBF24"
-            opacity={0.4} // Slightly transparent to avoid overpowering the line
-            barSize={30} // Increased for better visibility
+            fill="#f5c542"
+            dot={false}
             name="Volume"
+            opacity={0.4}
+            strokeWidth={2}
+            activeDot={{ r: 6, fill: '#f5c542', stroke: '#f5c542', strokeWidth: 2 }}
+            animationDuration={800}
+            animationEasing="ease-in-out"
           />
           <Brush
             dataKey="date"

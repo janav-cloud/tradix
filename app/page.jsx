@@ -110,7 +110,7 @@ export default function Home() {
                       <img
                         src={`https://assets-netstorage.groww.in/intl-stocks/logos/${tickerForChart}.png`} // Primary image source
                         alt={`${tickerForChart} Logo`}
-                        className="p-1 w-10 h-10 object-contain items-center mix-blend-multiply"
+                        className="p-1 w-7 h-7 md:w-10 md:h-10 object-contain items-center mix-blend-multiply"
                         onError={(e) => {
                           e.target.onerror = null;
                           e.target.src = 'globe.svg';
